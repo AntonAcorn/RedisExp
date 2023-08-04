@@ -4,9 +4,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
+import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import ru.acorn.redisexp.queue.MessagePublisher;
 import ru.acorn.redisexp.queue.MessagePublisherImpl;
+import ru.acorn.redisexp.queue.MessageSubscriber;
 
 public class RedisConfig {
 
@@ -29,7 +31,12 @@ public class RedisConfig {
     }
 
     @Bean
-    ChannelTopic topic() {
+    public ChannelTopic topic() {
         return new ChannelTopic("pubsub:queue");
+    }
+
+    @Bean
+    public MessageListenerAdapter messageListenerAdapter() {
+        return new MessageListenerAdapter(new MessageSubscriber());
     }
 }
